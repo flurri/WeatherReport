@@ -65,7 +65,7 @@ function main() {
         if (config.debug) console.log("Readying... checking channel...");
         if (bot.channels.has("name", config.channel) === false) {
             console.error("Channel #%s does not exist", config.channel);
-            cleanupAndQuit(bot, null, "Channel error");
+            cleanupAndQuit(bot, "Channel error");
         }
         if (config.debug) console.log("Ready!");
         setInterval(() => {
