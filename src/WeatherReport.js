@@ -12,7 +12,7 @@ function onRssPoll(botInstance, data) {
     var doc = libxmljs.parseXml(data);
     var title = doc.get("/rss/channel/item/title").text();
     var link = doc.get("/rss/channel/item/link").text();
-    if (state !== link) {
+    if (state != link) {
         if (config.debug) console.log("New link: %s", link);
         if (config.sendMessage === false) {
             console.log("Would have sent: %s%s - %s", config.header, title, link);
@@ -23,7 +23,7 @@ function onRssPoll(botInstance, data) {
                                 config.header + title + " - " + link, (err) => {
                                     if (err) {
                                         console.error(err);
-                                        cleanupAndQuit(botInstance, state, "Couldn't send message");
+                                        cleanupAndQuit(botInstance, "Couldn't send message");
                                     } else {
                                         state = link;
                                     }
@@ -32,7 +32,7 @@ function onRssPoll(botInstance, data) {
 }
 
 // quit cleanly-- save state info, properly logout, etc
-function cleanupAndQuit(botInstance, state, errorInfo) {
+function cleanupAndQuit(botInstance, errorInfo) {
     if (state !== null) {
         fs.writeFileSync(config.state_dir + "/state", state);
     }
@@ -48,7 +48,7 @@ function main() {
 
     // make sure we exit cleanly on sigint (^C)
     process.on("SIGINT", () => {
-       cleanupAndQuit(bot, null, "Caught interrupt signal");
+       cleanupAndQuit(bot, "Caught interrupt signal");
     });
 
     // get last known state (if any)
@@ -81,7 +81,7 @@ function main() {
                 });
                 res.on("error", (err) => {
                     console.error(err);
-                    cleanupAndQuit(bot, state, "HTTP Error");
+                    cleanupAndQuit(bot, "HTTP Error");
                 });
             });
         }, config.polling_time*1000);
