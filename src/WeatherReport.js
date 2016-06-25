@@ -5,7 +5,7 @@ var libxmljs = require("libxmljs");
 var http = require("http");
 var fs = require("fs");
 var config = require("./config.json");
-var state = null
+var state = null;
 
 // called every time we poll for RSS updates (see main)
 function onRssPoll(botInstance, data) {
@@ -33,7 +33,7 @@ function onRssPoll(botInstance, data) {
 
 // quit cleanly-- save state info, properly logout, etc
 function cleanupAndQuit(botInstance, state, errorInfo) {
-    if (state != null) {
+    if (state !== null) {
         fs.writeFileSync(config.state_dir + "/state", state);
     }
     console.error("Quitting, reason: %s", errorInfo);
