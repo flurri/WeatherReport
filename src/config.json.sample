@@ -2,7 +2,7 @@
     "token": "",
     "channel": "general",
     "feed_url": "",
-    "polling_time": 3,
+    "polling_time": 300,
     "header": "New comic: ",
     "state_dir": "/var/db/WeatherReport",
     "debug": false,
