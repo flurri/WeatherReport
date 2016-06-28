@@ -145,7 +145,7 @@ function main() {
 if (require.main === module) {
     try {
         main();
-    } except (e) {
+    } catch (e) {
         console.error("UNEXPECTED ERROR");
         console.error(e);
         cleanupAndQuit();
