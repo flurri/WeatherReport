@@ -27,16 +27,21 @@ function onRssPoll(botInstance, data) {
                                         cleanupAndQuit(botInstance, "Couldn't send message");
                                     } else {
                                         state = link;
+                                        updateState();
                                     }
         });
     } else if (config.debug) console.log("Nothing new...");
 }
 
-// quit cleanly-- save state info, properly logout, etc
-function cleanupAndQuit(botInstance, errorInfo) {
+function updateState() {
     if (state !== null) {
         fs.writeFileSync(config.state_dir + "/state", state);
     }
+}
+
+// quit cleanly-- save state info, properly logout, etc
+function cleanupAndQuit(botInstance, errorInfo) {
+    updateState();
     console.error("Quitting, reason: %s", errorInfo);
     botInstance.destroy((err) => {
         if (err) console.error(err);
@@ -138,5 +143,11 @@ function main() {
 }
 
 if (require.main === module) {
-    main();
+    try {
+        main();
+    } except (e) {
+        console.error("UNEXPECTED ERROR");
+        console.error(e);
+        cleanupAndQuit();
+    }
 }
