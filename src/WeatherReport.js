@@ -4,7 +4,7 @@ var Discord = require("discord.js");
 var libxmljs = require("libxmljs");
 var http = require("http");
 var fs = require("fs");
-var config = require("./config.json");
+var config = null;
 var state = null;
 var mainInterval = null;
 
@@ -65,8 +65,14 @@ function botReady(botInstance) {
     }, config.polling_time*1000);
 }
 
+function getConfig() {
+    var configStr = fs.readFileSync("./config.json");
+    return JSON.parse(configStr);
+}
+
 function main() {
     var bot = new Discord.Client();
+    config = getConfig();
 
     // make sure we exit cleanly on sigint (^C)
     process.on("SIGINT", () => {
@@ -76,7 +82,13 @@ function main() {
     // reload on SIGHUP
     process.on("SIGHUP", () => {
         console.log("Caught SIGHUP, reloading configuration...");
-        var new_config = require("./config.json");
+        try {
+            var new_config = getConfig();
+        } catch (e) {
+            console.error("Can't load new config...");
+            console.error(e);
+            return;
+        }
         if (bot.channels.has("name", new_config.channel) === false) {
             console.log("New channel #%s doesn't exist, keeping old config", new_config.channel);
         } else {
