@@ -66,7 +66,7 @@ function botReady(botInstance) {
 }
 
 function getConfig() {
-    var configStr = fs.readFileSync("./config.json");
+    var configStr = fs.readFileSync(__dirname + "/config.json");
     return JSON.parse(configStr);
 }
 
