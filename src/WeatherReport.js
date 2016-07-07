@@ -120,7 +120,11 @@ function main() {
         }
     }
 
-    bot.on("ready", function () {
+    bot.on("disconnected", () => {
+        cleanupAndQuit(bot, "Disconnected");
+    });
+
+    bot.on("ready", () => {
         // make sure the channel even exists before we bother with anything else
         if (config.debug) console.log("Readying... checking channel...");
         var channelSet = false;
