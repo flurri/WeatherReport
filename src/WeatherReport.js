@@ -46,7 +46,7 @@ function cleanupAndQuit(botInstance, errorInfo) {
     botInstance.destroy((err) => {
         if (err) console.error(err);
     });
-    process.exit();
+    process.exit(1);
 }
 
 function botReady(botInstance) {
@@ -124,6 +124,11 @@ function main() {
         cleanupAndQuit(bot, "Disconnected");
     });
 
+    bot.on("error", () => {
+        updateState();
+        process.exit(2);
+    });
+
     bot.on("ready", () => {
         // make sure the channel even exists before we bother with anything else
         if (config.debug) console.log("Readying... checking channel...");
@@ -144,7 +149,6 @@ function main() {
     });
 
     bot.loginWithToken(config.token);
-    process.exit(2);
 }
 
 if (require.main === module) {
