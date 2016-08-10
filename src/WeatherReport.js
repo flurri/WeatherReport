@@ -144,6 +144,7 @@ function main() {
     });
 
     bot.loginWithToken(config.token);
+    process.exit(2);
 }
 
 if (require.main === module) {
