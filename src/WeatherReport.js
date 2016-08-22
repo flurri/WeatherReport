@@ -7,6 +7,12 @@ var fs = require("fs");
 var config = null;
 var state = null;
 var mainInterval = null;
+var recentException = false;
+// http.get crashing doesn't really give much of a solution, so...
+process.on("uncaughtException", () => {
+    console.error("Uncaught exception, waiting...");
+    recentException = true;
+});
 
 // called every time we poll for RSS updates (see main)
 function onRssPoll(botInstance, data) {
@@ -52,6 +58,7 @@ function cleanupAndQuit(botInstance, errorInfo) {
 function botReady(botInstance) {
     if (config.debug) console.log("Ready!");
     mainInterval = setInterval(() => {
+        if (recentException) return;
         if (config.debug) console.log("Getting %s", config.feed_url);
         http.get(config.feed_url, (res) => {
             var pageData = "";
