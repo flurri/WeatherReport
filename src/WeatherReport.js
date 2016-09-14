@@ -28,7 +28,7 @@ function onRssPoll(botInstance, data) {
             state = link;
             return;
         }
-        botInstance.channels.get("name", config.channel).sendMessage(config.header + title + " - " + link)
+        botInstance.channels.find("name", config.channel).sendMessage(config.header + title + " - " + link)
         .then(() => {
                 state = link;
                 updateState();
@@ -100,7 +100,7 @@ function main() {
             console.error(e);
             return;
         }
-        if (bot.channels.has("name", new_config.channel) === false) {
+        if (bot.channels.exists("name", new_config.channel) === false) {
             console.log("New channel #%s doesn't exist, keeping old config", new_config.channel);
         } else {
             config = new_config;
@@ -139,10 +139,10 @@ function main() {
         // make sure the channel even exists before we bother with anything else
         if (config.debug) console.log("Readying... checking channel...");
         var channelSet = false;
-        if (bot.channels.has("name", config.channel) === false) {
+        if (bot.channels.exists("name", config.channel) === false) {
             console.error("Channel #%s does not exist, entering wait mode...", config.channel);
             var channelWait = setInterval(() => {
-                if (bot.channels.has("name", config.channel) === true) {
+                if (bot.channels.exists("name", config.channel) === true) {
                     clearInterval(channelWait);
                     botReady(bot);
                 } else {
