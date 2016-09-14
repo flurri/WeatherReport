@@ -28,15 +28,13 @@ function onRssPoll(botInstance, data) {
             state = link;
             return;
         }
-        botInstance.sendMessage(botInstance.channels.get("name", config.channel),
-                                config.header + title + " - " + link, (err) => {
-                                    if (err) {
-                                        console.error(err);
-                                        cleanupAndQuit(botInstance, "Couldn't send message");
-                                    } else {
-                                        state = link;
-                                        updateState();
-                                    }
+        botInstance.channels.get("name", config.channel).sendMessage(config.header + title + " - " + link)
+        .then(() => {
+                state = link;
+                updateState();
+        }).catch((err) => {
+                console.error(err);
+                cleanupAndQuit(botInstance, "Couldn't send message");
         });
     } else if (config.debug) console.log("Nothing new...");
 }
@@ -156,7 +154,7 @@ function main() {
         }
     });
 
-    bot.loginWithToken(config.token);
+    bot.login(config.token);
 }
 
 if (require.main === module) {
